@@ -1,44 +1,52 @@
-def quickSort(alist):
-   quickSortHelper(alist,0,len(alist)-1)
-
-def quickSortHelper(alist,first,last):
-   if first<last:
-
-       splitpoint = partition(alist,first,last)
-
-       quickSortHelper(alist,first,splitpoint-1)
-       quickSortHelper(alist,splitpoint+1,last)
+"""
+    Ascending order sorting only. Switch the conditions for descending order sorting.
+    usage: python3 quick_sort.py --input_list 102,4,111,24,5555
+"""
+import argparse
 
 
-def partition(alist,first,last):
-   pivotvalue = alist[first]
-
-   leftmark = first+1
-   rightmark = last
-
-   done = False
-   while not done:
-
-       while leftmark <= rightmark and alist[leftmark] <= pivotvalue:
-           leftmark = leftmark + 1
-
-       while alist[rightmark] >= pivotvalue and rightmark >= leftmark:
-           rightmark = rightmark -1
-
-       if rightmark < leftmark:
-           done = True
-       else:
-           temp = alist[leftmark]
-           alist[leftmark] = alist[rightmark]
-           alist[rightmark] = temp
-
-   temp = alist[first]
-   alist[first] = alist[rightmark]
-   alist[rightmark] = temp
+def quick_sort(list_to_sort):
+    quick_sort_helper(list_to_sort, 0, len(list_to_sort) - 1)
 
 
-   return rightmark
+def quick_sort_helper(list_to_sort, first, last):
+    if first < last:
+        split_point = partition(list_to_sort, first, last)
 
-alist = [54,26,93,17,77,31,44,55,20]
-quickSort(alist)
-print(alist)
+        quick_sort_helper(list_to_sort, first, split_point - 1)
+        quick_sort_helper(list_to_sort, split_point + 1, last)
+
+
+def partition(list_to_sort, first, last):
+    pivot_value = list_to_sort[first]
+
+    left_mark = first + 1
+    right_mark = last
+
+    sentinel = False
+    while not sentinel:
+
+        while left_mark <= right_mark and list_to_sort[left_mark] <= pivot_value:
+            left_mark = left_mark + 1
+
+        while list_to_sort[right_mark] >= pivot_value and right_mark >= left_mark:
+            right_mark = right_mark - 1
+
+        if right_mark < left_mark:
+            sentinel = True
+        else:
+            list_to_sort[left_mark], list_to_sort[right_mark] = list_to_sort[right_mark], list_to_sort[left_mark]
+
+    list_to_sort[first], list_to_sort[right_mark] = list_to_sort[right_mark], list_to_sort[first]
+
+    return right_mark
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Take input list and key to be found')
+    parser.add_argument('--input_list', help="List of inputs", type=str)
+    args = parser.parse_args()
+
+    list_to_be_sorted = [int(list_item) for list_item in args.input_list.split(',')]
+    quick_sort(list_to_be_sorted)
+    print(list_to_be_sorted)
